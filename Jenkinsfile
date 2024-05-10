@@ -3,8 +3,6 @@ import java.nio.file.Paths
 
 pipeline{
 
-agent any
-
 options{
     buildDiscarder(logRotator(numToKeepStr:'20'))
 }
@@ -29,6 +27,7 @@ stages{
                 try{
                     bat """
                     echo 'Entered Into Build Phase'
+                    npm install -g appium
                     mvn clean
                     echo 'Build Success'
                     """
