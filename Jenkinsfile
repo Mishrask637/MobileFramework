@@ -3,7 +3,7 @@ import java.nio.file.Paths
 
 pipeline{
 
-agent local
+agent none
 
 options{
     buildDiscarder(logRotator(numToKeepStr:'20'))
