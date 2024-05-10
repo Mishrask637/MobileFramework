@@ -22,7 +22,7 @@ public class AmazonSearchStep {
 
 	@Then("I delete product from cart")
 	public void i_delete_product_from_cart() {
-		amazonHomePage.removeItemFromcart();
+		amazonHomePage.removeItemFromCart();
 	}
 
 }

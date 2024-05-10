@@ -1,42 +1,62 @@
 package hooks;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.Duration;
-
+import java.time.LocalDateTime;
+import io.cucumber.java.*;
 import org.openqa.selenium.WebDriver;
-
 import baseclass.AppiumService;
 import baseclass.Driver;
-import io.cucumber.java.After;
-import io.cucumber.java.AfterAll;
-import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
 import utility.GenerateCucumberReports;
+import utility.Helper;
 
 public class CucumberHooks {
 
-	WebDriver driver;
+	static LocalDateTime time = LocalDateTime.now();
+	public static String screenshotPath = System.getProperty("user.dir")+"/screenshots/"+time.getDayOfMonth()+"_"+time.getMonth()+"_"+time.getYear();
 
 	@BeforeAll
 	public static void startAppium() {
 		AppiumService.startService();
+		Driver.initDriver();
+		Helper.createDir(screenshotPath);
 	}
 
 	@Before
 	public void setup() {
-		Driver.initDriver();
 		Driver.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}
 
 	@After
-	public void tearDown() {
-		Driver.getDriver().quit();
-		Driver.driver.set(null);
+	public void tearDown(Scenario scenario) throws FileNotFoundException {
+		if(scenario.isFailed()){
+            byte[] ss = null;
+			FileOutputStream fos = new FileOutputStream(screenshotPath+"\\"+scenario.getName()+"_"+time.getHour()+"_"+time.getMinute()+"_"+time.getSecond()+".png");
+            try {
+                ss = Helper.takeScreenShot();
+				fos.write(ss);
+				fos.flush();
+				fos.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            scenario.attach(ss,"image/png",scenario.getName());
+		}
 	}
 
 	@AfterAll
 	public static void afterAll() {
-		GenerateCucumberReports reports = new GenerateCucumberReports();
-		reports.generateCucumberReports();
+		Driver.getDriver().quit();
+		Driver.driver.set(null);
 		AppiumService.stopService();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        GenerateCucumberReports reports = new GenerateCucumberReports();
+		reports.generateCucumberReports();
 	}
 }

@@ -1,72 +1,79 @@
 package pageobjects;
 
-import org.openqa.selenium.Keys;
+import baseclass.Driver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import utility.Helper;
+
+import java.time.Duration;
 
 public class AmazonHomePage {
 
 	AppiumDriver driver;
 
-	@FindBy(id = "com.amazon.mShop.android.shopping:id/skip_sign_in_button")
+	@FindBy(id = "in.amazon.mShop.android.shopping:id/skip_sign_in_button")
 	WebElement skipSignin;
 
-	@FindBy(id = "com.amazon.mShop.android.shopping:id/chrome_action_bar_search_icon")
+	@FindBy(id = "in.amazon.mShop.android.shopping:id/chrome_action_bar_search_icon")
 	WebElement searchIcon;
 
-	@FindBy(id = "com.amazon.mShop.android.shopping:id/chrome_search_hint_view")
+	@FindBy(id = "in.amazon.mShop.android.shopping:id/chrome_search_hint_view")
 	WebElement searchBar;
 
-	@FindBy(id = "com.amazon.mShop.android.shopping:id/rs_search_src_text")
+	@FindBy(id = "in.amazon.mShop.android.shopping:id/rs_search_src_text")
 	WebElement searchField;
 
 	@FindBy(xpath = "//android.widget.Button[@text=\"mobile\"]")
 	WebElement mobileElemet;
 
-	@FindBy(xpath = "//android.view.View[@resource-id=\"search\"]/android.view.View[3]/android.view.View")
+	@FindBy(xpath = "//android.widget.TextView[@text=\"Results Check each product page for other buying options.\"]/..//following-sibling::android.view.View[1]")
 	WebElement firstProduct;
 
-	@FindBy(id = "add-to-cart-button")
+	@FindBy(xpath = "//android.widget.Button[contains(@text,\"Add to Cart\")]")
 	WebElement addToCart;
 
-	@FindBy(xpath = "//android.widget.Button[@text=\"X\"]")
+	@FindBy(xpath = "//android.widget.TextView[@text='DONE']")
 	WebElement done;
 
-	@FindBy(xpath = "(//android.widget.ImageView[@resource-id=\"com.amazon.mShop.android.shopping:id/bottom_tab_button_icon\"])[3]")
+	@FindBy(id = "in.amazon.mShop.android.shopping:id/cart_count")
 	WebElement cartIcon;
 
 	@FindBy(xpath = "//android.widget.Button[@text=\"Delete\"]")
 	WebElement deleteIcon;
 
-	@FindBy(xpath = "//android.widget.ImageView[@content-desc=\"Home Tab 1 of 4\"]")
+	@FindBy(xpath = "(//android.widget.ImageView[@resource-id=\"in.amazon.mShop.android.shopping:id/bottom_tab_button_icon\"])[1]")
 	WebElement homeIcon;
-
-	public String scrollStr = "\"new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\"?\"))\"";
 
 	public AmazonHomePage(AppiumDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 	}
 
-	public void searchMobileAndAddToCart() throws InterruptedException {
-		skipSignin.click();
+	public void searchMobileAndAddToCart() {
+		try{
+			skipSignin.click();
+		}
+		catch (Exception e){
+			System.out.println("Element is not displayed");
+		}
 		searchIcon.isDisplayed();
 		searchBar.click();
-		searchField.sendKeys("Mobile" + Keys.ENTER);
+		searchField.sendKeys("Mobile");
+		new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(mobileElemet));
 		mobileElemet.click();
-		firstProduct.click();
-		driver.findElement(AppiumBy.androidUIAutomator(scrollStr.replace("?", "\"Add to Cart  \""))).click();
+		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),firstProduct);
+		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),addToCart);
 		done.click();
 	}
 
-	public void removeItemFromcart() {
+	public void removeItemFromCart() {
 
 		cartIcon.click();
-		driver.findElement(AppiumBy.androidUIAutomator(scrollStr.replace("?", "\"Delete\""))).click();
+		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),deleteIcon);
 		homeIcon.click();
 	}
 }

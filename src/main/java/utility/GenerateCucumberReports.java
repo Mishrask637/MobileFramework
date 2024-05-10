@@ -14,15 +14,15 @@ import net.masterthought.cucumber.presentation.PresentationMode;
 public class GenerateCucumberReports {
 
 	public void createDir() {
-		File dir = new File("reports/cucumberhtmlreports/");
+		File dir = new File("target/reports/cucumberhtmlreports/");
 
 		if (!dir.exists()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 	}
 
 	public void removeDir() {
-		File dir = new File("reports/cucumberhtmlreports/");
+		File dir = new File("target/reports/cucumberhtmlreports/");
 
 		if (dir.exists()) {
 			dir.delete();
@@ -33,13 +33,13 @@ public class GenerateCucumberReports {
 
 		removeDir();
 		createDir();
-		File reportOutputDirectory = new File("reports/cucumberhtmlreports/");
+		File reportOutputDirectory = new File("target/reports/cucumberhtmlreports/");
 		List<String> jsonFiles = new ArrayList<>();
 		jsonFiles.add(
-				"C:\\Users\\mishr\\eclipse-workspace\\PracticeFrameworkSelenium4\\reports\\json\\cucumberReports.json");
+				System.getProperty("user.dir")+"\\target\\reports\\json\\cucumberReports.json");
 
 		String buildNumber = "1";
-		String projectName = "cucumberProject";
+		String projectName = "MobileAutomationCucumberProject";
 
 		Configuration configuration = new Configuration(reportOutputDirectory, projectName);
 		// optional configuration - check javadoc for details

@@ -3,20 +3,17 @@ package pageobjects;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
 import baseclass.Driver;
 import io.appium.java_client.AppiumDriver;
 
 public class AutomationPracticePage {
 
-	private WebDriver driver;
+	private AppiumDriver driver;
 
 	@FindBy(xpath = "(//table[@id='countries']/tbody/tr)[1]/td")
 	private List<WebElement> tableHeaders;
@@ -65,13 +62,9 @@ public class AutomationPracticePage {
 
 	public void clickOnCountry(String country) {
 		String rowVal = String.valueOf(getCountryRowCount(country));
-
 		WebElement countryCheckBox = driver.findElements(By.xpath(checkBox.replace("?", rowVal))).get(0);
-
 		JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
-
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded(true);", countryCheckBox);
-
 		driver.findElements(By.xpath(checkBox.replace("?", rowVal))).get(0).click();
 
 	}
