@@ -59,12 +59,13 @@
     <version>7.17.0</version>
 </dependency>
 
-<!-- https://mvnrepository.com/artifact/net.masterthought/cucumber-reporting -->
-<dependency>
-    <groupId>net.masterthought</groupId>
-    <artifactId>cucumber-reporting</artifactId>
-    <version>5.8.0</version>
-</dependency>
+      <!-- https://mvnrepository.com/artifact/net.masterthought/maven-cucumber-reporting -->
+      <dependency>
+          <groupId>net.masterthought</groupId>
+          <artifactId>maven-cucumber-reporting</artifactId>
+          <version>5.8.5</version>
+      </dependency>
+
 
       <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
       <dependency>

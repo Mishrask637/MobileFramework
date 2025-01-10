@@ -99,7 +99,7 @@ public class Helper {
 	public static void scrollUntilElementIsVisibleAndClick(AppiumDriver driver, WebElement element) {
 		Dimension size = driver.manage().window().getSize();
 		int startX = size.getWidth() / 2;
-		int startY = (int) (size.getHeight() * 0.87);
+		int startY = (int) (size.getHeight() * 0.70);
 		int endX = startX;
 		int endY = (int) (size.getHeight() * 0.17);
 		for(int i=0;i<5;i++) {

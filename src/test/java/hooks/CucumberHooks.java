@@ -31,32 +31,34 @@ public class CucumberHooks {
 
 	@After
 	public void tearDown(Scenario scenario) throws FileNotFoundException {
-		if(scenario.isFailed()){
-            byte[] ss = null;
-			FileOutputStream fos = new FileOutputStream(screenshotPath+"\\"+scenario.getName()+"_"+time.getHour()+"_"+time.getMinute()+"_"+time.getSecond()+".png");
-            try {
-                ss = Helper.takeScreenShot();
+		if(scenario.isFailed()) {
+			byte[] ss = null;
+			FileOutputStream fos = new FileOutputStream(screenshotPath + "\\" + scenario.getName() + "_" + time.getHour() + "_" + time.getMinute() + "_" + time.getSecond() + ".png");
+			try {
+				ss = Helper.takeScreenShot();
 				fos.write(ss);
 				fos.flush();
 				fos.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            scenario.attach(ss,"image/png",scenario.getName());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			scenario.attach(ss, "image/png", scenario.getName());
 		}
+			System.out.println("Terminating app....");
+			Driver.getDriver().quit();
+            Driver.driver.remove();
 	}
 
 	@AfterAll
 	public static void afterAll() {
-		Driver.getDriver().quit();
-		Driver.driver.set(null);
-		AppiumService.stopService();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+		System.out.println("In After All block....");
         GenerateCucumberReports reports = new GenerateCucumberReports();
 		reports.generateCucumberReports();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		AppiumService.stopService();
 	}
 }

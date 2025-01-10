@@ -48,8 +48,8 @@ public class GenerateCucumberReports {
 		configuration.setNotFailingStatuses(Collections.singleton(Status.SKIPPED));
 		configuration.setBuildNumber(buildNumber);
 		// addidtional metadata presented on main page
-		configuration.addClassifications("Platform", "Windows");
-		configuration.addClassifications("Browser", "Firefox");
+		configuration.addClassifications("Platform", "Android");
+		configuration.addClassifications("Device", "One Plus 12");
 		configuration.addClassifications("Branch", "release/1.0");
 
 		// optionally add metadata presented on main page via properties file
@@ -64,8 +64,13 @@ public class GenerateCucumberReports {
 //		        configuration.setQualifier("cucumber-report-2","Second report");
 
 		ReportBuilder reportBuilder = new ReportBuilder(jsonFiles, configuration);
-		Reportable result = reportBuilder.generateReports();
+		reportBuilder.generateReports();
 		// and here validate 'result' to decide what to do if report has failed
+	}
+
+	public static void main(String[] args) {
+		GenerateCucumberReports reports = new GenerateCucumberReports();
+		reports.generateCucumberReports();
 	}
 
 }

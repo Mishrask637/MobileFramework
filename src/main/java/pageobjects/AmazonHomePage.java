@@ -1,6 +1,8 @@
 package pageobjects;
 
 import baseclass.Driver;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -15,38 +17,41 @@ public class AmazonHomePage {
 
 	AppiumDriver driver;
 
-	@FindBy(id = "in.amazon.mShop.android.shopping:id/skip_sign_in_button")
+	@FindBy(id = "com.amazon.mShop.android.shopping:id/skip_sign_in_button")
 	WebElement skipSignin;
 
-	@FindBy(id = "in.amazon.mShop.android.shopping:id/chrome_action_bar_search_icon")
+	@FindBy(id = "com.amazon.mShop.android.shopping:id/chrome_action_bar_search_icon")
 	WebElement searchIcon;
 
-	@FindBy(id = "in.amazon.mShop.android.shopping:id/chrome_search_hint_view")
+	@FindBy(id = "com.amazon.mShop.android.shopping:id/chrome_search_hint_view")
 	WebElement searchBar;
 
-	@FindBy(id = "in.amazon.mShop.android.shopping:id/rs_search_src_text")
+	@FindBy(id = "com.amazon.mShop.android.shopping:id/rs_search_src_text")
 	WebElement searchField;
 
-	@FindBy(xpath = "//android.widget.Button[@text=\"mobile\"]")
-	WebElement mobileElemet;
+	@FindBy(xpath = "(//android.widget.Button)[2]")
+	WebElement mobileElement;
 
-	@FindBy(xpath = "//android.widget.TextView[@text=\"Results Check each product page for other buying options.\"]/..//following-sibling::android.view.View[1]")
+	@FindBy(xpath = "//android.view.View[@resource-id=\"search\"]/android.widget.TextView")
 	WebElement firstProduct;
 
 	@FindBy(xpath = "//android.widget.Button[contains(@text,\"Add to Cart\")]")
 	WebElement addToCart;
 
-	@FindBy(xpath = "//android.widget.TextView[@text='DONE']")
+	@FindBy(xpath = "//android.widget.Button[@text='DONE']")
 	WebElement done;
 
-	@FindBy(id = "in.amazon.mShop.android.shopping:id/cart_count")
+	@FindBy(id = "com.amazon.mShop.android.shopping:id/cart_count")
 	WebElement cartIcon;
 
-	@FindBy(xpath = "//android.widget.Button[@text=\"Delete\"]")
+	@FindBy(xpath = "//android.widget.Button[@text='Decrease quantity by one']")
 	WebElement deleteIcon;
 
-	@FindBy(xpath = "(//android.widget.ImageView[@resource-id=\"in.amazon.mShop.android.shopping:id/bottom_tab_button_icon\"])[1]")
+	@FindBy(xpath = "(//android.widget.ImageView[@resource-id=\"com.amazon.mShop.android.shopping:id/bottom_tab_button_icon\"])[1]")
 	WebElement homeIcon;
+
+	@FindBy(xpath="//android.widget.Button[@resource-id=\"ax-mbs-close-white\"]")
+	WebElement xButton;
 
 	public AmazonHomePage(AppiumDriver driver) {
 		this.driver = driver;
@@ -62,12 +67,17 @@ public class AmazonHomePage {
 		}
 		searchIcon.isDisplayed();
 		searchBar.click();
-		searchField.sendKeys("Mobile");
-		new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(mobileElemet));
-		mobileElemet.click();
+		new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30)).until(ExpectedConditions.visibilityOf(searchField)).isDisplayed();
+		searchField.sendKeys("iphone");
+		mobileElement.click();
 		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),firstProduct);
 		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),addToCart);
-		done.click();
+		try{
+			done.click();
+		}
+		catch (Exception e){
+			xButton.click();
+		}
 	}
 
 	public void removeItemFromCart() {
@@ -75,5 +85,7 @@ public class AmazonHomePage {
 		cartIcon.click();
 		Helper.scrollUntilElementIsVisibleAndClick(Driver.getDriver(),deleteIcon);
 		homeIcon.click();
+		homeIcon.click();
+		new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30)).until(ExpectedConditions.visibilityOf(searchIcon)).isDisplayed();
 	}
 }
